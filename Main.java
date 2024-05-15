@@ -5,6 +5,10 @@ public class Main {
 	private Monitor monitor = new Monitor();
 
 	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> createAndShowGUI());		
+	}
+	
+	private static void initLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
@@ -20,8 +24,6 @@ public class Main {
     	catch (IllegalAccessException e) {
     		e.printStackTrace();
 		}
-		
-		SwingUtilities.invokeLater(() -> createAndShowGUI());		
 	}
 
 	private static void createAndShowGUI() {
