@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 
@@ -12,16 +13,18 @@ public class SensorReceiver extends JPanel {
 	private JLabel titleLabel;
 	private JLabel dataLabel;
 
-	private String dataPath;
+	private Path dataPath;
 
 	private Timer timer;
 	
 	// SensorReceiver(<name of sensor>, <sensor.txt name>)
 	// SensorReceiver reads sensor files and displays them in a Sensor on the Monitor.
 	public SensorReceiver(String name, String data) {
-		setLayout(new BorderLayout());
+		setLayout(new FlowLayout());
 		initComponents(name, data);
 		initReader();
+		
+		Logger.logText("Created new sensor of name " + name);
 	}
 	
 	// readSensorFile()
@@ -29,11 +32,11 @@ public class SensorReceiver extends JPanel {
 	// in the sensor's data label.
 	public void readSensorFile() {
 		try {
-			String content = new String(Files.readAllBytes(Paths.get(dataPath)));
+			String content = new String(Files.readAllBytes(dataPath));
 			dataLabel.setText(content);
 		}
 		catch (IOException err) {
-			err.printStackTrace();					
+			Logger.logError("Error reading sensor file");
 		}
 	}
 	
@@ -48,10 +51,10 @@ public class SensorReceiver extends JPanel {
 		titleLabel = new JLabel(name);
 		dataLabel = new JLabel();
 
-		dataPath = data;
+		dataPath = Main.getDataDirectory().resolve(data);
 
-		add(titleLabel, BorderLayout.NORTH);
-		add(dataLabel, BorderLayout.CENTER);
+		add(titleLabel);
+		add(dataLabel);
 	}
 
 }

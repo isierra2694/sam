@@ -13,6 +13,12 @@ public class Aquarium extends JPanel {
 		titleLabel = new JLabel("Aquarium");
 		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		add(titleLabel, BorderLayout.NORTH);
+		
+		add(new AquariumPicture(), BorderLayout.CENTER);
+	}
+
+	private void initSensors() {
+	
 	}
 
 	@Override

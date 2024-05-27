@@ -22,15 +22,16 @@ public class Monitor extends JPanel {
 	private void initComponents() {
 		titleLabel = new JLabel("Monitor");
 		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(titleLabel, BorderLayout.NORTH);
 		
 		sensorGrid = new JPanel(new GridLayout(0,3));
-		SensorReceiver testSensor = new SensorReceiver("test", "/home/indy/Repositories/sam/test.txt");
-		SensorReceiver testSensor2 = new SensorReceiver("test2", "/home/indy/Repositories/sam/test.txt");
+		SensorReceiver testSensor = new SensorReceiver("test", "test.txt");
+		SensorReceiver testSensor2 = new SensorReceiver("test2", "test2.txt");
 		sensorGrid.add(testSensor);
 		sensorGrid.add(testSensor2);
 
-		add(sensorGrid, BorderLayout.NORTH);
+		add(sensorGrid, BorderLayout.CENTER);
 	}
 	
 	// initRefresher()
