@@ -40,10 +40,14 @@ public class Monitor extends JPanel {
 		Timer timer = new Timer(REFRESH_INTERVAL * 1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Loop over every active sensor and call readSensorFile()
+				// Loop over every active sensor and call readSensor()
 			}
 		});
 		timer.start();
+	}
+
+	public void registerSensor(Sensor sensor) {
+		SensorReceiver newReceiver = new SensorReceiver();
 	}
 
 	@Override

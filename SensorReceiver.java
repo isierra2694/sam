@@ -13,45 +13,37 @@ public class SensorReceiver extends JPanel {
 	private JLabel titleLabel;
 	private JLabel dataLabel;
 
-	private Path dataPath;
-
-	private Timer timer;
+	private Sensor sensor;
 	
-	// SensorReceiver(<name of sensor>, <sensor.txt name>)
-	// SensorReceiver reads sensor files and displays them in a Sensor on the Monitor.
-	public SensorReceiver(String name, String data) {
+	// SensorReceiver(<Sensor object>)
+	// SensorReceiver takes data from a Sensor file and displays them in a Sensor on the Monitor.
+	public SensorReceiver(Sensor sensor) {
+		this.sensor = sensor;
+
 		setLayout(new FlowLayout());
-		initComponents(name, data);
+		initComponents();
 		initReader();
 		
-		Logger.logText("Created new sensor of name " + name);
+		Logger.logText("Created new sensor of type " + sensor.getType());
 	}
 	
-	// readSensorFile()
-	// Reads the sensor.txt file associated with this sensor and displays that
-	// in the sensor's data label.
-	public void readSensorFile() {
-		try {
-			String content = new String(Files.readAllBytes(dataPath));
-			dataLabel.setText(content);
-		}
-		catch (IOException err) {
-			Logger.logError("Error reading sensor file");
-		}
+	// readSensor()
+	// Gets data from sensor and sets content in data label.
+	public void readSensor() {
+		String content = sensor.getData();
+		dataLabel.setText(content);
 	}
 	
 	// initReader()
 	// Called when we load the sensor for the first time so we can display initial data
 	// in the sensor's data label.
 	private void initReader() {
-		readSensorFile();
+		readSensor();
 	}
 
-	private void initComponents(String name, String data) {
-		titleLabel = new JLabel(name);
+	private void initComponents() {
+		titleLabel = new JLabel(sensor.getType());
 		dataLabel = new JLabel();
-
-		dataPath = Main.getDataDirectory().resolve(data);
 
 		add(titleLabel);
 		add(dataLabel);
