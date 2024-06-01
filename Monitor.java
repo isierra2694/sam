@@ -1,19 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Monitor extends JPanel {
 	private static final int REFRESH_INTERVAL = 5;
 	
-	private SensorReceiver[] sensors;
+	private static List<SensorReceiver> sensorReceivers;
 	
-	private JPanel sensorGrid;
+	private static JPanel sensorGrid;
 	private JLabel titleLabel;
 	
 	// Monitor()
 	// Monitor displays all data points.
 	public Monitor() {
+		sensorReceivers = new ArrayList<SensorReceiver>();
+		
 		setLayout(new BorderLayout());
 		initComponents();
 		initRefresher();
@@ -26,10 +30,6 @@ public class Monitor extends JPanel {
 		add(titleLabel, BorderLayout.NORTH);
 		
 		sensorGrid = new JPanel(new GridLayout(0,3));
-		SensorReceiver testSensor = new SensorReceiver("test", "test.txt");
-		SensorReceiver testSensor2 = new SensorReceiver("test2", "test2.txt");
-		sensorGrid.add(testSensor);
-		sensorGrid.add(testSensor2);
 
 		add(sensorGrid, BorderLayout.CENTER);
 	}
@@ -40,14 +40,23 @@ public class Monitor extends JPanel {
 		Timer timer = new Timer(REFRESH_INTERVAL * 1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Loop over every active sensor and call readSensor()
+				// Loop over every active SensorReceiver and call readSensor()
+				for (SensorReceiver sensorReceiver : sensorReceivers) {
+					sensorReceiver.readSensor();
+				}
 			}
 		});
 		timer.start();
 	}
 
-	public void registerSensor(Sensor sensor) {
-		SensorReceiver newReceiver = new SensorReceiver();
+	public static void registerSensor(Sensor sensor) {
+		SensorReceiver newReceiver = new SensorReceiver(sensor);
+		sensorReceivers.add(newReceiver);
+		sensorGrid.add(newReceiver);
+		
+		sensorGrid.revalidate();
+		sensorGrid.repaint();
+		Logger.logText("Registered new sensor of type " + sensor.getType());
 	}
 
 	@Override

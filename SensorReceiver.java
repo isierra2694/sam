@@ -30,8 +30,10 @@ public class SensorReceiver extends JPanel {
 	// readSensor()
 	// Gets data from sensor and sets content in data label.
 	public void readSensor() {
-		String content = sensor.getData();
+		String content = Double.toString(sensor.getData());
 		dataLabel.setText(content);
+
+		Logger.logText("Read data from sensor");
 	}
 	
 	// initReader()
