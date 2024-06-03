@@ -12,6 +12,7 @@ public class SensorReceiver extends JPanel {
 
 	private JLabel titleLabel;
 	private JLabel dataLabel;
+	private JButton optionsButton;
 
 	private Sensor sensor;
 	
@@ -32,8 +33,6 @@ public class SensorReceiver extends JPanel {
 	public void readSensor() {
 		String content = Double.toString(sensor.getData());
 		dataLabel.setText(content);
-
-		Logger.logText("Read data from sensor");
 	}
 	
 	// initReader()
@@ -46,9 +45,42 @@ public class SensorReceiver extends JPanel {
 	private void initComponents() {
 		titleLabel = new JLabel(sensor.getType());
 		dataLabel = new JLabel();
+		optionsButton = new JButton("Options");
+		
+		optionsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createModal();
+			}
+		});
 
 		add(titleLabel);
 		add(dataLabel);
+		add(optionsButton);
 	}
 
+	private void createModal() {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JFrame frame = new JFrame(sensor.getType() + " sensor options");
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				JPanel panel = new JPanel(new BorderLayout());
+				JLabel label = new JLabel("Options");
+				panel.add(label, BorderLayout.NORTH);
+				frame.add(panel);
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+				frame.setVisible(true);
+				frame.setResizable(false);
+			}
+		});
+	}
 }

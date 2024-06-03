@@ -44,7 +44,9 @@ public class Aquarium extends JPanel {
                 Sensor newSensor = Sensor.fromString(line);
 				sensors.add(newSensor);
             }
-        } catch (IOException e) {
+        } 
+		catch (IOException e) {
+			Logger.logError("An error occurred while reading the aquarium file");
             e.printStackTrace();
         }
 	}
@@ -87,7 +89,14 @@ public class Aquarium extends JPanel {
 	}
 
 	public void writeSensorDataToFile(Sensor sensor) {
-
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("sensors.txt"))) {
+			writer.write(sensor.toString());
+			writer.newLine();
+		}
+		catch (IOException e) {
+			Logger.logError("An error occured while writing the aquarium file");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
