@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
-
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 public class SensorReceiver extends JPanel {
 	private static final int INTERVAL_SECONDS = 5;
 
@@ -15,6 +17,8 @@ public class SensorReceiver extends JPanel {
 	private JButton optionsButton;
 
 	private Sensor sensor;
+
+	private LineGraphPanel graph;
 	
 	// SensorReceiver(<Sensor object>)
 	// SensorReceiver takes data from a Sensor file and displays them in a Sensor on the Monitor.
@@ -31,8 +35,23 @@ public class SensorReceiver extends JPanel {
 	// readSensor()
 	// Gets data from sensor and sets content in data label.
 	public void readSensor() {
-		String content = Double.toString(sensor.getData());
+		double data = sensor.getData();
+		if (sensor.getDataType() == "%") data *= 100;
+
+		String content = Double.toString(data) + " "  + sensor.getDataType();
 		dataLabel.setText(content);
+
+		plot(data);
+	}
+	
+	// alert()
+	// Creates a button on the sensor receiver to simulate manually fixing the sensor.
+	public void alert() {
+		
+	}
+
+	private void plot(double data) {
+		graph.addDataPoint(data);
 	}
 	
 	// initReader()
@@ -57,6 +76,10 @@ public class SensorReceiver extends JPanel {
 		add(titleLabel);
 		add(dataLabel);
 		add(optionsButton);
+		
+		graph = new LineGraphPanel();
+
+		add(graph);
 	}
 
 	private void createModal() {
@@ -74,8 +97,22 @@ public class SensorReceiver extends JPanel {
 
 				JPanel panel = new JPanel(new BorderLayout());
 				JLabel label = new JLabel("Options");
+				JSpinner minValue = new JSpinner(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+				JButton submitButton = new JButton("Submit");
+				
+				JPanel inputPanel = new JPanel();
+				inputPanel.add(minValue);
+				inputPanel.add(submitButton);
+
 				panel.add(label, BorderLayout.NORTH);
+				inputPanel.add(minValue, BorderLayout.CENTER);
+				inputPanel.add(submitButton, BorderLayout.SOUTH);
+				
+				panel.add(inputPanel, BorderLayout.CENTER);
 				frame.add(panel);
+				
+				frame.setPreferredSize(new Dimension(800, 600));
+
 				frame.pack();
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);

@@ -33,7 +33,9 @@ public class Aquarium extends JPanel {
 		add(new AquariumPicture(), BorderLayout.CENTER);	
 		
 		buttonsPanel = new JPanel(new FlowLayout());
-		buttonsPanel.add(createButton("Temperature", 24, 2, 24));
+		buttonsPanel.add(createButton("Temperature", "C", 24, 2, 24, 24, true));
+		buttonsPanel.add(createButton("ph", "pH", 7.5, 0.5, 7.5, 7.5, true));
+		buttonsPanel.add(createButton("Water Fullness", "%", 0.95, 0.02, 0.95, 0.95, false));
 		add(buttonsPanel, BorderLayout.SOUTH);
 	}
 
@@ -57,7 +59,13 @@ public class Aquarium extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// Loop over each Sensor and call update()
 				for (Sensor sensor : sensors) {
-					sensor.update();
+					if (sensor.getUserPreferredVal() <= sensor.getData() || !sensor.getIsAutomated()) {
+						sensor.update(false);
+					}
+					else {
+						if (sensor.getIsAutomated()) sensor.update(true);
+						//else sensor.alert();
+					}
 					writeSensorDataToFile(sensor);
 				}
 			}
@@ -66,12 +74,12 @@ public class Aquarium extends JPanel {
 		timer.start();
 	}
 
-	private JButton createButton(String type, double data, double delta, double defaultVal) {
+	private JButton createButton(String type, String dataType, double data, double delta, double defaultVal, double userPreferredVal, boolean isAutomated) {
 		JButton newButton = new JButton("Add " + type);
 		newButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				createSensor(type, data, delta, defaultVal);
+				createSensor(type, dataType, data, delta, defaultVal, userPreferredVal, isAutomated);
 				buttonsPanel.remove(newButton);
 				buttonsPanel.revalidate();
 				buttonsPanel.repaint();
@@ -81,9 +89,9 @@ public class Aquarium extends JPanel {
 		return newButton;
 	}
 
-	private void createSensor(String type, double data, double delta, double defaultVal) {
+	private void createSensor(String type, String dataType, double data, double delta, double defaultVal, double userPreferredVal, boolean isAutomated) {
 		// add image to aquarium whene we create a sensor?
-		Sensor newSensor = new Sensor(type, data, delta, defaultVal);
+		Sensor newSensor = new Sensor(type, dataType, data, delta, defaultVal, userPreferredVal, isAutomated);
 		Monitor.registerSensor(newSensor);
 		sensors.add(newSensor);
 	}
