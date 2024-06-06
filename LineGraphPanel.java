@@ -12,7 +12,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class LineGraphPanel extends JPanel {
-   private static final int MAX_SCORE = 20;
+   private static final int MAX_SCORE = 100;
    private static final int PREF_W = 300;
    private static final int PREF_H = 200;
    private static final int BORDER_GAP = 30;

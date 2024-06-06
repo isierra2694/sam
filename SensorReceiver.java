@@ -36,6 +36,8 @@ public class SensorReceiver extends JPanel {
 	// Gets data from sensor and sets content in data label.
 	public void readSensor() {
 		double data = sensor.getData();
+		int scale = (int) Math.pow(10, 2);
+		data = (double) Math.round(data * scale) / scale;
 		if (sensor.getDataType() == "%") data *= 100;
 
 		String content = Double.toString(data) + " "  + sensor.getDataType();
@@ -47,7 +49,7 @@ public class SensorReceiver extends JPanel {
 	// alert()
 	// Creates a button on the sensor receiver to simulate manually fixing the sensor.
 	public void alert() {
-		
+			
 	}
 
 	private void plot(double data) {
@@ -97,7 +99,7 @@ public class SensorReceiver extends JPanel {
 
 				JPanel panel = new JPanel(new BorderLayout());
 				JLabel label = new JLabel("Options");
-				JSpinner minValue = new JSpinner(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+				JSpinner minValue = new JSpinner(new SpinnerNumberModel(sensor.getUserPreferredVal(), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 				JButton submitButton = new JButton("Submit");
 				
 				JPanel inputPanel = new JPanel();
@@ -117,6 +119,14 @@ public class SensorReceiver extends JPanel {
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
 				frame.setResizable(false);
+				
+				submitButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						int number = (Integer) minValue.getValue();
+						sensor.setUserPreferredVal(number);
+					}
+				});
 			}
 		});
 	}

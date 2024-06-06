@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import javax.imageio.*;
+import java.io.File;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +32,16 @@ public class Aquarium extends JPanel {
 		titleLabel = new JLabel("Aquarium");
 		titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		add(titleLabel, BorderLayout.NORTH);
+		try {
+			BufferedImage aquariumPic = ImageIO.read(new File("aquarium.png"));
 		
-		add(new AquariumPicture(), BorderLayout.CENTER);	
+			JLabel picLabel = new JLabel(new ImageIcon(aquariumPic));
+		
+			add(picLabel, BorderLayout.CENTER);	
+		}	
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		buttonsPanel = new JPanel(new FlowLayout());
 		buttonsPanel.add(createButton("Temperature", "C", 24, 2, 24, 24, true));
